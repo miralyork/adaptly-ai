@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as DashboardRoleRouteImport } from './routes/dashboard.$role'
 import { Route as SoonSlugRouteImport } from './routes/soon.$slug'
+import { Route as SoonOurMissionRouteImport } from './routes/soon.our-mission'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const SoonSlugRoute = SoonSlugRouteImport.update({
   path: '/soon/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SoonOurMissionRoute = SoonOurMissionRouteImport.update({
+  id: '/soon/our-mission',
+  path: '/soon/our-mission',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/platform': typeof PlatformRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
+  '/soon/our-mission': typeof SoonOurMissionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/platform': typeof PlatformRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
+  '/soon/our-mission': typeof SoonOurMissionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +70,25 @@ export interface FileRoutesById {
   '/platform': typeof PlatformRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
+  '/soon/our-mission': typeof SoonOurMissionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/platform' | '/dashboard/$role' | '/soon/$slug'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/platform'
+    | '/dashboard/$role'
+    | '/soon/$slug'
+    | '/soon/our-mission'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/platform' | '/dashboard/$role' | '/soon/$slug'
+  to:
+    | '/'
+    | '/about'
+    | '/platform'
+    | '/dashboard/$role'
+    | '/soon/$slug'
+    | '/soon/our-mission'
   id:
     | '__root__'
     | '/'
@@ -75,6 +96,7 @@ export interface FileRouteTypes {
     | '/platform'
     | '/dashboard/$role'
     | '/soon/$slug'
+    | '/soon/our-mission'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,6 +105,7 @@ export interface RootRouteChildren {
   PlatformRoute: typeof PlatformRoute
   DashboardRoleRoute: typeof DashboardRoleRoute
   SoonSlugRoute: typeof SoonSlugRoute
+  SoonOurMissionRoute: typeof SoonOurMissionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoonSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/soon/our-mission': {
+      id: '/soon/our-mission'
+      path: '/soon/our-mission'
+      fullPath: '/soon/our-mission'
+      preLoaderRoute: typeof SoonOurMissionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -131,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlatformRoute: PlatformRoute,
   DashboardRoleRoute: DashboardRoleRoute,
   SoonSlugRoute: SoonSlugRoute,
+  SoonOurMissionRoute: SoonOurMissionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
