@@ -31,21 +31,12 @@ const COLUMNS: { title: string; links: { label: string; slug: string }[] }[] = [
       { label: "Help Centre", slug: "help-centre" },
     ],
   },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy Policy", slug: "privacy-policy" },
-      { label: "Terms of Use", slug: "terms-of-use" },
-      { label: "Accessibility", slug: "accessibility" },
-      { label: "Cookies", slug: "cookies" },
-    ],
-  },
 ];
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-2 lg:grid-cols-6">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">

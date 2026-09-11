@@ -1,8 +1,5 @@
 # Adaptly AI: Personalized Learning Preview
 
-Lovable Build Prompt — Adaptly AI Website (Early-Stage MVP)
-
-Copy everything below into Lovable as your project prompt.
 
 Project Brief
 
@@ -190,19 +187,9 @@ All "dynamic" behavior (interest/subject demo, dashboard sidebar switching, form
 
 Keep the codebase simple and readable — this is an early MVP demo site, not a production platform. I will be later on deploy this product so make sure any media used should be publicly accessible even after deployment
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/6b44e3df-d86c-46ba-ad87-234286f64faa).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>
