@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as PlatformRouteImport } from './routes/platform'
+import { Route as WhatIsAutismRouteImport } from './routes/what-is-autism'
 import { Route as DashboardRoleRouteImport } from './routes/dashboard.$role'
 import { Route as SoonSlugRouteImport } from './routes/soon.$slug'
 import { Route as SoonOurMissionRouteImport } from './routes/soon.our-mission'
@@ -29,6 +30,11 @@ const AboutRoute = AboutRouteImport.update({
 const PlatformRoute = PlatformRouteImport.update({
   id: '/platform',
   path: '/platform',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WhatIsAutismRoute = WhatIsAutismRouteImport.update({
+  id: '/what-is-autism',
+  path: '/what-is-autism',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoleRoute = DashboardRoleRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/platform': typeof PlatformRoute
+  '/what-is-autism': typeof WhatIsAutismRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
   '/soon/our-mission': typeof SoonOurMissionRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/platform': typeof PlatformRoute
+  '/what-is-autism': typeof WhatIsAutismRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
   '/soon/our-mission': typeof SoonOurMissionRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/platform': typeof PlatformRoute
+  '/what-is-autism': typeof WhatIsAutismRoute
   '/dashboard/$role': typeof DashboardRoleRoute
   '/soon/$slug': typeof SoonSlugRoute
   '/soon/our-mission': typeof SoonOurMissionRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/platform'
+    | '/what-is-autism'
     | '/dashboard/$role'
     | '/soon/$slug'
     | '/soon/our-mission'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/platform'
+    | '/what-is-autism'
     | '/dashboard/$role'
     | '/soon/$slug'
     | '/soon/our-mission'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/platform'
+    | '/what-is-autism'
     | '/dashboard/$role'
     | '/soon/$slug'
     | '/soon/our-mission'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   PlatformRoute: typeof PlatformRoute
+  WhatIsAutismRoute: typeof WhatIsAutismRoute
   DashboardRoleRoute: typeof DashboardRoleRoute
   SoonSlugRoute: typeof SoonSlugRoute
   SoonOurMissionRoute: typeof SoonOurMissionRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/platform'
       fullPath: '/platform'
       preLoaderRoute: typeof PlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/what-is-autism': {
+      id: '/what-is-autism'
+      path: '/what-is-autism'
+      fullPath: '/what-is-autism'
+      preLoaderRoute: typeof WhatIsAutismRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/$role': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   PlatformRoute: PlatformRoute,
+  WhatIsAutismRoute: WhatIsAutismRoute,
   DashboardRoleRoute: DashboardRoleRoute,
   SoonSlugRoute: SoonSlugRoute,
   SoonOurMissionRoute: SoonOurMissionRoute,

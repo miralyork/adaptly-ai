@@ -45,7 +45,7 @@ export function DashboardSnapshot() {
             </div>
           </div>
           <div className="mt-3 flex items-center gap-2">
-            {["Cars", "Space", "Animals"].map((c) => (
+            {["🚗 Cars", "🚀 Space", "🐶 Animals"].map((c) => (
               <span
                 key={c}
                 className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium text-accent-foreground"

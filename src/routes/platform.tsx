@@ -3,16 +3,15 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
-  CheckCircle2,
   Flame,
   Rocket,
   Sparkles,
   Target,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
 
 import { DashboardSnapshot } from "@/components/site/dashboard-mock";
+import { PersonalisationDemo } from "@/components/site/personalisation-demo";
 import { SiteShell } from "@/components/site/site-shell";
 import { useSiteDialogs } from "@/components/site/site-dialogs";
 import { Button } from "@/components/ui/button";
@@ -191,119 +190,6 @@ function DashboardsPreview() {
         <DashboardSnapshot />
       </div>
     </Section>
-  );
-}
-
-const INTERESTS = ["Cars", "Space", "Animals", "Football"] as const;
-const SUBJECTS = ["Mathematics", "Science"] as const;
-
-const EXAMPLES: Record<string, string> = {
-  "Cars|Mathematics": "If a car travels 60 miles in 2 hours, what is its average speed?",
-  "Cars|Science":
-    "Why does a car take longer to stop on a wet road? Let's explore friction using race cars.",
-  "Space|Mathematics":
-    "A rocket travels 1,200 km in 4 minutes. How far does it travel each minute?",
-  "Space|Science": "Why do astronauts float on the space station? Let's look at gravity in orbit.",
-  "Animals|Mathematics": "A cheetah runs 30 metres in 1 second. How far does it run in 5 seconds?",
-  "Animals|Science":
-    "Polar bears have thick fur and fat. How does that help them survive in cold habitats?",
-  "Football|Mathematics":
-    "A team scores 3 goals in each of 4 matches. How many goals is that in total?",
-  "Football|Science":
-    "Why does a football curve in the air when it spins? Let's explore forces in motion.",
-};
-
-function PersonalisationDemo() {
-  const [interest, setInterest] = useState<string | null>(null);
-  const [subject, setSubject] = useState<string | null>(null);
-
-  const ready = interest && subject;
-  const example = ready ? EXAMPLES[`${interest}|${subject}`] : undefined;
-
-  return (
-    <Section>
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-semibold">See Personalisation in Action</h2>
-        <p className="mt-4 text-muted-foreground">
-          Pick an interest and a subject to see the kind of example Adaptly AI would build. These
-          are prepared demo examples — no live AI is used on this site.
-        </p>
-      </div>
-
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-muted-foreground">
-        {["Learner Interest", "Subject", "Adaptly AI Generates", "Result"].map((s, i) => (
-          <span key={s} className="flex items-center gap-3">
-            <span className="rounded-full bg-secondary px-3 py-1.5">{s}</span>
-            {i < 3 ? <ArrowRight className="size-3.5" /> : null}
-          </span>
-        ))}
-      </div>
-
-      <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-border bg-gradient-soft p-8 shadow-card">
-        <p className="text-sm font-medium">1. Choose an interest</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {INTERESTS.map((i) => (
-            <Chip key={i} active={interest === i} onClick={() => setInterest(i)}>
-              {i}
-            </Chip>
-          ))}
-        </div>
-
-        <p className="mt-6 text-sm font-medium">2. Choose a subject</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {SUBJECTS.map((s) => (
-            <Chip key={s} active={subject === s} onClick={() => setSubject(s)}>
-              {s}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="mt-8 rounded-2xl bg-card p-6">
-          {!ready ? (
-            <p className="text-sm text-muted-foreground">
-              Pick one interest and one subject to generate a sample lesson question.
-            </p>
-          ) : example ? (
-            <>
-              <p className="flex items-center gap-2 text-sm font-medium text-success">
-                <CheckCircle2 className="size-4" /> Lesson personalised successfully!
-              </p>
-              <p className="mt-3 text-lg font-medium">{example}</p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                {interest} · {subject} · sample content
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              More personalised examples coming soon for this combination.
-            </p>
-          )}
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-function Chip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-        active
-          ? "border-transparent bg-gradient-brand text-primary-foreground shadow-soft"
-          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

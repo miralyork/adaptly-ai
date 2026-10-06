@@ -1,5 +1,6 @@
 import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import {
+  ArrowRight,
   Award,
   BarChart3,
   BookOpen,
@@ -28,9 +29,9 @@ import {
 } from "recharts";
 
 import { Logo } from "@/components/site/logo";
+import { INTEREST_PICTURES, PictureGrid, emojiFor } from "@/components/site/pictures";
 import { SiteShell } from "@/components/site/site-shell";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -69,8 +70,6 @@ const PROGRESS_DATA = [
   { day: "Sat", score: 74 },
   { day: "Sun", score: 87 },
 ];
-
-const ALL_INTERESTS = ["Cars", "Space", "Animals", "Football", "Music", "Dinosaurs"];
 
 const NAV_BY_ROLE: Record<Role, { key: string; label: string; icon: typeof Flame }[]> = {
   learner: [
@@ -249,7 +248,14 @@ function LearnerDashboard() {
             {interests.length === 0 ? (
               <p className="text-sm text-muted-foreground">No interests selected yet.</p>
             ) : (
-              interests.map((i) => <Pill key={i}>{i}</Pill>)
+              interests.map((i) => (
+                <Pill key={i}>
+                  <span aria-hidden className="mr-1 text-base">
+                    {emojiFor(i)}
+                  </span>
+                  {i}
+                </Pill>
+              ))
             )}
           </div>
         </div>
@@ -597,9 +603,9 @@ const PANEL_BLOCKS: Record<string, { title: string; body: string }[]> = {
     { title: "Reading Comprehension: Race Cars 🏎️", body: "English · not started" },
   ],
   Interests: [
-    { title: "Top interest: Cars", body: "Used in 12 of the last 20 lesson examples." },
-    { title: "Space", body: "Great fit for distance, speed and measurement topics." },
-    { title: "Animals", body: "Used across science and reading activities." },
+    { title: "🚗 Top interest: Cars", body: "Used in 12 of the last 20 lesson examples." },
+    { title: "🚀 Space", body: "Great fit for distance, speed and measurement topics." },
+    { title: "🐶 Animals", body: "Used across science and reading activities." },
   ],
   Progress: [
     { title: "Mathematics", body: "Mastery 72% · steady upward trend" },
@@ -676,52 +682,87 @@ function EditInterestsDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Edit interests</DialogTitle>
+          <DialogTitle>What do you love?</DialogTitle>
           <DialogDescription>
-            Interests shape lesson examples. Changes are local to this demo.
+            Tap the pictures. Your lessons will use them. Changes are local to this demo.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {ALL_INTERESTS.map((item) => {
-            const checked = interests.includes(item);
-            return (
-              <label
-                key={item}
-                className="flex items-center gap-3 rounded-xl border border-border p-3"
-              >
-                <Checkbox
-                  checked={checked}
-                  onCheckedChange={(v) =>
-                    setInterests(v ? [...interests, item] : interests.filter((i) => i !== item))
-                  }
-                />
-                <span className="text-sm font-medium">{item}</span>
-              </label>
-            );
-          })}
-        </div>
+        <PictureGrid
+          label="What do you love?"
+          items={INTEREST_PICTURES}
+          selected={interests}
+          onChange={setInterests}
+        />
         <Button onClick={() => onOpenChange(false)}>Done</Button>
       </DialogContent>
     </Dialog>
   );
 }
 
-const LESSON_CARDS = [
+type PizzaState = { slices: number; eaten: number };
+
+const LESSON_CARDS: { q: string; a: string; pizza: PizzaState; answerPizza?: PizzaState }[] = [
   {
     q: "A pizza is cut into 8 equal slices. Aarav eats 2 slices. What fraction of the pizza is left?",
     a: "6/8, which simplifies to 3/4.",
+    pizza: { slices: 8, eaten: 2 },
   },
   {
     q: "Two friends share a pizza equally. What fraction does each person get?",
     a: "Each person gets 1/2 of the pizza.",
+    pizza: { slices: 2, eaten: 0 },
   },
   {
     q: "If 3/4 of a pizza is left and you eat 1/4 more, how much remains?",
     a: "1/2 of the pizza remains.",
+    pizza: { slices: 4, eaten: 1 },
+    answerPizza: { slices: 4, eaten: 2 },
   },
 ];
+
+/** A pizza drawn in slices, so fractions can be seen rather than only read. */
+function PizzaPicture({ slices, eaten }: PizzaState) {
+  const cx = 80;
+  const cy = 80;
+  const r = 66;
+  const point = (a: number, radius: number) =>
+    `${cx + radius * Math.cos(a)},${cy + radius * Math.sin(a)}`;
+  const label = `A pizza cut into ${slices} slices, with ${slices - eaten} left`;
+
+  return (
+    <svg viewBox="0 0 160 160" className="size-36" role="img" aria-label={label}>
+      <circle cx={cx} cy={cy} r={r + 8} fill="var(--color-secondary)" />
+      {Array.from({ length: slices }, (_, i) => {
+        const a0 = (i / slices) * 2 * Math.PI - Math.PI / 2;
+        const a1 = ((i + 1) / slices) * 2 * Math.PI - Math.PI / 2;
+        const mid = (a0 + a1) / 2;
+        const gone = i < eaten;
+        return (
+          <g key={i}>
+            <path
+              d={`M${cx},${cy} L${point(a0, r)} A${r},${r} 0 0 1 ${point(a1, r)} Z`}
+              fill={gone ? "none" : "#F6C453"}
+              stroke={gone ? "var(--color-muted-foreground)" : "#C9771F"}
+              strokeWidth={gone ? 1.5 : 2.5}
+              strokeDasharray={gone ? "4 4" : undefined}
+              strokeLinejoin="round"
+            />
+            {gone ? null : (
+              <circle
+                cx={cx + r * 0.58 * Math.cos(mid)}
+                cy={cy + r * 0.58 * Math.sin(mid)}
+                r={slices > 4 ? 6 : 9}
+                fill="#D9534F"
+              />
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
 
 function LessonDialog({
   open,
@@ -731,14 +772,19 @@ function LessonDialog({
   onOpenChange: (v: boolean) => void;
 }) {
   const [step, setStep] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
   const card = LESSON_CARDS[step] ?? LESSON_CARDS[0]!;
+  const goTo = (next: number) => {
+    setStep(next);
+    setShowAnswer(false);
+  };
 
   return (
     <Dialog
       open={open}
       onOpenChange={(v) => {
         onOpenChange(v);
-        if (!v) setStep(0);
+        if (!v) goTo(0);
       }}
     >
       <DialogContent className="sm:max-w-lg">
@@ -751,27 +797,38 @@ function LessonDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="rounded-2xl bg-gradient-soft p-6">
-          <p className="font-medium">{card.q}</p>
-          <p className="mt-4 rounded-xl bg-card p-3 text-sm text-muted-foreground">
-            <span className="font-medium text-success">Answer: </span>
-            {card.a}
-          </p>
+          <div className="flex items-center justify-center gap-4">
+            <PizzaPicture {...card.pizza} />
+            {showAnswer && card.answerPizza ? (
+              <>
+                <ArrowRight aria-hidden className="size-6 text-muted-foreground" />
+                <PizzaPicture {...card.answerPizza} />
+              </>
+            ) : null}
+          </div>
+          <p className="mt-4 font-medium">{card.q}</p>
+          {showAnswer ? (
+            <p className="mt-4 rounded-xl bg-card p-3 text-sm text-muted-foreground">
+              <span className="font-medium text-success">Answer: </span>
+              {card.a}
+            </p>
+          ) : (
+            <Button variant="outline" className="mt-4" onClick={() => setShowAnswer(true)}>
+              Show answer
+            </Button>
+          )}
         </div>
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            disabled={step === 0}
-            onClick={() => setStep((s) => Math.max(0, s - 1))}
-          >
+        <div className="flex items-center justify-between gap-2">
+          <Button variant="outline" disabled={step === 0} onClick={() => goTo(step - 1)}>
             Previous
           </Button>
-          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Gauge className="size-3.5" /> Difficulty adapts in the full product
+          <span className="flex items-center gap-1.5 text-center text-xs text-muted-foreground">
+            <Gauge className="size-3.5 shrink-0" /> Difficulty adapts in the full product
           </span>
           {step === LESSON_CARDS.length - 1 ? (
             <Button onClick={() => onOpenChange(false)}>Close</Button>
           ) : (
-            <Button onClick={() => setStep((s) => s + 1)}>Next</Button>
+            <Button onClick={() => goTo(step + 1)}>Next</Button>
           )}
         </div>
       </DialogContent>

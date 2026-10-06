@@ -1,8 +1,14 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 
-
+import {
+  INTEREST_PICTURES,
+  LEARNING_STYLE_PICTURES,
+  PictureGrid,
+  emojiFor,
+  type Picture,
+} from "@/components/site/pictures";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -68,8 +74,12 @@ export function SiteDialogsProvider({ children }: { children: ReactNode }) {
   );
 }
 
-const ROLES = ["Learner", "Parent", "Educator"] as const;
-type LoginRole = (typeof ROLES)[number];
+const ROLES: Picture[] = [
+  { id: "Learner", emoji: "🧒", label: "Learner" },
+  { id: "Parent", emoji: "👨‍👩‍👧", label: "Parent" },
+  { id: "Educator", emoji: "🧑‍🏫", label: "Educator" },
+];
+type LoginRole = "Learner" | "Parent" | "Educator";
 
 function LoginDialog({
   open,
@@ -133,19 +143,15 @@ function LoginDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="login-role">Role</Label>
-            <select
-              id="login-role"
-              value={role}
-              onChange={(e) => setRole(e.target.value as LoginRole)}
-              className="h-10 w-full rounded-md border border-input bg-card px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
+            <p className="text-sm font-medium">I am a…</p>
+            <PictureGrid
+              label="I am a"
+              items={ROLES}
+              selected={[role]}
+              multiple={false}
+              onChange={([r]) => r && setRole(r as LoginRole)}
+              className="grid-cols-3"
+            />
           </div>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
           <Button type="submit" className="w-full">
@@ -158,7 +164,20 @@ function LoginDialog({
 }
 
 
-const REASONS: PilotReason[] = ["Parent", "Educator", "Organisation/Partner", "Other"];
+const REASONS: (Picture & { id: PilotReason })[] = [
+  { id: "Parent", emoji: "👨‍👩‍👧", label: "Parent or carer" },
+  { id: "Educator", emoji: "🧑‍🏫", label: "Teacher" },
+  { id: "Organisation/Partner", emoji: "🏫", label: "School or organisation" },
+  { id: "Other", emoji: "🙋", label: "Someone else" },
+];
+
+/** Each step has a picture so the progress bar itself is readable without words. */
+const PILOT_STEPS = [
+  { emoji: "🙋", label: "Who" },
+  { emoji: "💛", label: "Loves" },
+  { emoji: "🧠", label: "Learns" },
+  { emoji: "✉️", label: "Contact" },
+];
 
 function PilotDialog({
   open,
@@ -171,11 +190,29 @@ function PilotDialog({
   reason: PilotReason;
   setReason: (r: PilotReason) => void;
 }) {
+  const [step, setStep] = useState(0);
+  const [interests, setInterests] = useState<string[]>([]);
+  const [styles, setStyles] = useState<string[]>([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+
+  const many = reason === "Educator" || reason === "Organisation/Partner";
+  const titles = [
+    "Who is joining?",
+    many ? "What do your learners love?" : "What does your learner love?",
+    "How do they like to learn?",
+    "How can we reach you?",
+  ];
+  const hints = [
+    "Tap a picture.",
+    "Tap every picture that fits. We use these to build lessons.",
+    "Tap every picture that fits.",
+    "A grown-up fills in this last step.",
+  ];
+  const picked = [...interests, ...styles];
 
   return (
     <Dialog
@@ -185,20 +222,54 @@ function PilotDialog({
         if (!v) {
           setError("");
           setSent(false);
+          setStep(0);
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Join the Adaptly AI pilot</DialogTitle>
+          <DialogTitle>{sent ? "Thank you!" : titles[step]}</DialogTitle>
           <DialogDescription>
-            Tell us a little about you and we'll be in touch about early pilots.
+            {sent ? "Join the Adaptly AI pilot" : `Join the Adaptly AI pilot · ${hints[step]}`}
           </DialogDescription>
         </DialogHeader>
+
+        {sent ? null : (
+          <ol className="grid grid-cols-4 gap-2" aria-label={`Step ${step + 1} of 4`}>
+            {PILOT_STEPS.map((s, i) => (
+              <li key={s.label} className="flex flex-col items-center gap-1">
+                <span
+                  aria-hidden
+                  className={`flex size-10 items-center justify-center rounded-full text-xl transition-colors ${
+                    i === step
+                      ? "bg-primary-soft ring-2 ring-primary"
+                      : i < step
+                        ? "bg-success-soft"
+                        : "bg-secondary opacity-60"
+                  }`}
+                >
+                  {i < step ? "✅" : s.emoji}
+                </span>
+                <span
+                  className={`text-[11px] font-medium ${
+                    i === step ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {s.label}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
 
         {sent ? (
           <div className="rounded-xl bg-success-soft p-6 text-center">
             <CheckCircle2 className="mx-auto size-8 text-success" />
+            {picked.length > 0 ? (
+              <p aria-hidden className="mt-3 text-3xl">
+                {picked.map(emojiFor).join(" ")}
+              </p>
+            ) : null}
             <p className="mt-3 font-medium">
               Thanks — we'll be in touch about the Adaptly AI pilot programme.
             </p>
@@ -206,8 +277,34 @@ function PilotDialog({
               This demo form doesn't send anything yet.
             </p>
           </div>
+        ) : step === 0 ? (
+          <PictureGrid
+            label={titles[0]!}
+            items={REASONS}
+            selected={[reason]}
+            multiple={false}
+            size="lg"
+            onChange={([r]) => r && setReason(r as PilotReason)}
+            className="grid-cols-2"
+          />
+        ) : step === 1 ? (
+          <PictureGrid
+            label={titles[1]!}
+            items={INTEREST_PICTURES}
+            selected={interests}
+            onChange={setInterests}
+          />
+        ) : step === 2 ? (
+          <PictureGrid
+            label={titles[2]!}
+            items={LEARNING_STYLE_PICTURES}
+            selected={styles}
+            onChange={setStyles}
+            className="grid-cols-3"
+          />
         ) : (
           <form
+            id="pilot-form"
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
@@ -219,6 +316,17 @@ function PilotDialog({
               setSent(true);
             }}
           >
+            <div className="flex items-center gap-3 rounded-xl bg-secondary p-3">
+              <span aria-hidden className="text-2xl">
+                {REASONS.find((r) => r.id === reason)?.emoji}
+              </span>
+              <span aria-hidden className="text-2xl">
+                {picked.length > 0 ? picked.map(emojiFor).join(" ") : "—"}
+              </span>
+              <span className="sr-only">
+                Your choices: {[reason, ...picked].join(", ")}
+              </span>
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="pilot-name">Name</Label>
@@ -241,21 +349,6 @@ function PilotDialog({
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pilot-role">I am a…</Label>
-              <select
-                id="pilot-role"
-                value={reason}
-                onChange={(e) => setReason(e.target.value as PilotReason)}
-                className="h-10 w-full rounded-md border border-input bg-card px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {REASONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="pilot-message">Message (optional)</Label>
               <Textarea
                 id="pilot-message"
@@ -266,10 +359,31 @@ function PilotDialog({
               />
             </div>
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
-            <Button type="submit" className="w-full">
-              Send interest
-            </Button>
           </form>
+        )}
+
+        {sent ? null : (
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              variant="outline"
+              disabled={step === 0}
+              onClick={() => setStep((s) => Math.max(0, s - 1))}
+            >
+              <ArrowLeft className="size-4" /> Back
+            </Button>
+            {step < PILOT_STEPS.length - 1 ? (
+              <Button onClick={() => setStep((s) => s + 1)}>
+                {(step === 1 && interests.length === 0) || (step === 2 && styles.length === 0)
+                  ? "Skip"
+                  : "Next"}{" "}
+                <ArrowRight className="size-4" />
+              </Button>
+            ) : (
+              <Button type="submit" form="pilot-form">
+                Send interest
+              </Button>
+            )}
+          </div>
         )}
       </DialogContent>
     </Dialog>
