@@ -13,7 +13,10 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     tanstackStart(),
-    nitro({ preset: "vercel" }),
+    // Bundle every dependency into the server function. The built output is
+    // committed to git, and .gitignore drops node_modules, so any externalised
+    // package (e.g. tslib) would be missing on Vercel and crash every page.
+    nitro({ preset: "vercel", noExternals: true }),
     viteReact(),
   ],
 });
