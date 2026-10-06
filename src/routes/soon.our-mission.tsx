@@ -147,7 +147,7 @@ function OurMissionPage() {
               variant="outline"
               className="border-white/30 bg-white/15 text-white hover:bg-white/25 hover:text-white"
             >
-              <Link to="/soon/$slug" params={{ slug: "explore-autism" }}>
+              <Link to="/what-is-autism">
                 Explore autism
               </Link>
             </Button>

@@ -19,9 +19,8 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { useState } from "react";
-
 import { DashboardSnapshot } from "@/components/site/dashboard-mock";
+import { PersonalisationDemo } from "@/components/site/personalisation-demo";
 import { SiteShell } from "@/components/site/site-shell";
 import { useSiteDialogs } from "@/components/site/site-dialogs";
 import { Button } from "@/components/ui/button";
@@ -50,10 +49,11 @@ function HomePage() {
   return (
     <SiteShell>
       <Hero />
+      <AutismIntro />
       <Problem />
       <HowItWorks />
       <Features />
-      <PersonalisationDemo />
+      <PersonalisationDemo className="bg-card" />
       <Audience />
       <ResponsibleAI />
       <CtaBanner />
@@ -126,6 +126,47 @@ function Hero() {
   );
 }
 
+function AutismIntro() {
+  return (
+    <section className="px-5 pt-16">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 rounded-3xl border border-border bg-card p-6 shadow-card sm:p-8 lg:grid-cols-5">
+        <div className="lg:col-span-2">
+          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
+            New to autism?
+          </span>
+          <h2 className="mt-4 text-2xl font-semibold">What does "autistic" mean?</h2>
+          <p className="mt-3 text-muted-foreground">
+            Autism is a lifelong difference in how a person's brain works — how they experience the
+            world, communicate and connect with others. It isn't an illness. Every autistic person
+            is different, with their own strengths and needs.
+          </p>
+          <Link
+            to="/what-is-autism"
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          >
+            Read our simple guide to autism <ArrowRight className="size-4" />
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:col-span-3">
+          {[
+            { emoji: "🔊", text: "Sounds, lights or busy places can feel much stronger." },
+            { emoji: "📅", text: "Knowing what comes next helps people feel calm and safe." },
+            { emoji: "⭐", text: "Deep interests bring joy — and are a great way to learn." },
+            { emoji: "💬", text: "Words may be taken literally. Pictures can help a lot." },
+          ].map((c) => (
+            <div key={c.emoji} className="flex items-center gap-4 rounded-2xl bg-gradient-soft p-4">
+              <span aria-hidden className="text-4xl">
+                {c.emoji}
+              </span>
+              <p className="text-sm font-medium">{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Problem() {
   return (
     <Section>
@@ -177,21 +218,29 @@ function HowItWorks() {
       icon: Lightbulb,
       title: "Understand",
       body: "Learners, parents or educators provide interests, preferences and learning needs.",
+      picture: "🧒 💛 🚗",
+      caption: "Aarav loves cars",
     },
     {
       icon: Repeat,
       title: "Adapt",
       body: "Our AI creates personalised lessons, examples and activities.",
+      picture: "🚗 ➕ 🔢",
+      caption: "Maths with cars",
     },
     {
       icon: GraduationCap,
       title: "Learn",
       body: "Learners engage with content that matches their pace and interests.",
+      picture: "🧒 📚 🐢",
+      caption: "At Aarav's own pace",
     },
     {
       icon: LineChart,
       title: "Improve",
       body: "Progress and feedback help the system improve future learning experiences.",
+      picture: "⭐ 📈 🎯",
+      caption: "Next lesson fits even better",
     },
   ];
   return (
@@ -213,6 +262,12 @@ function HowItWorks() {
               {i + 1}. {s.title}
             </h3>
             <p className="mx-auto mt-2 max-w-xs text-sm text-muted-foreground">{s.body}</p>
+            <div className="mx-auto mt-4 max-w-[13rem] rounded-2xl bg-gradient-soft px-3 py-3">
+              <p aria-hidden className="text-2xl tracking-wider">
+                {s.picture}
+              </p>
+              <p className="mt-1 text-xs font-medium text-muted-foreground">{s.caption}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -272,120 +327,6 @@ function Features() {
         ))}
       </div>
     </Section>
-  );
-}
-
-const INTERESTS = ["Cars", "Space", "Animals", "Football"] as const;
-const SUBJECTS = ["Mathematics", "Science"] as const;
-
-const EXAMPLES: Record<string, string> = {
-  "Cars|Mathematics": "If a car travels 60 miles in 2 hours, what is its average speed?",
-  "Cars|Science":
-    "Why does a car take longer to stop on a wet road? Let's explore friction using race cars.",
-  "Space|Mathematics":
-    "A rocket travels 1,200 km in 4 minutes. How far does it travel each minute?",
-  "Space|Science": "Why do astronauts float on the space station? Let's look at gravity in orbit.",
-  "Animals|Mathematics":
-    "A cheetah runs 30 metres in 1 second. How far does it run in 5 seconds?",
-  "Animals|Science":
-    "Polar bears have thick fur and fat. How does that help them survive in cold habitats?",
-  "Football|Mathematics":
-    "A team scores 3 goals in each of 4 matches. How many goals is that in total?",
-  "Football|Science":
-    "Why does a football curve in the air when it spins? Let's explore forces in motion.",
-};
-
-function PersonalisationDemo() {
-  const [interest, setInterest] = useState<string | null>(null);
-  const [subject, setSubject] = useState<string | null>(null);
-
-  const ready = interest && subject;
-  const example = ready ? EXAMPLES[`${interest}|${subject}`] : undefined;
-
-  return (
-    <Section className="bg-card">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-semibold">See Personalisation in Action</h2>
-        <p className="mt-4 text-muted-foreground">
-          Pick an interest and a subject to see the kind of example Adaptly AI would build. These
-          are prepared demo examples — no live AI is used on this site.
-        </p>
-      </div>
-
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-muted-foreground">
-        {["Learner Interest", "Subject", "Adaptly AI Generates", "Result"].map((s, i) => (
-          <span key={s} className="flex items-center gap-3">
-            <span className="rounded-full bg-secondary px-3 py-1.5">{s}</span>
-            {i < 3 ? <ArrowRight className="size-3.5" /> : null}
-          </span>
-        ))}
-      </div>
-
-      <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-border bg-gradient-soft p-8 shadow-card">
-        <p className="text-sm font-medium">1. Choose an interest</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {INTERESTS.map((i) => (
-            <Chip key={i} active={interest === i} onClick={() => setInterest(i)}>
-              {i}
-            </Chip>
-          ))}
-        </div>
-
-        <p className="mt-6 text-sm font-medium">2. Choose a subject</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {SUBJECTS.map((s) => (
-            <Chip key={s} active={subject === s} onClick={() => setSubject(s)}>
-              {s}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="mt-8 rounded-2xl bg-card p-6">
-          {!ready ? (
-            <p className="text-sm text-muted-foreground">
-              Pick one interest and one subject to generate a sample lesson question.
-            </p>
-          ) : example ? (
-            <>
-              <p className="flex items-center gap-2 text-sm font-medium text-success">
-                <CheckCircle2 className="size-4" /> Lesson personalised successfully!
-              </p>
-              <p className="mt-3 text-lg font-medium">{example}</p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                {interest} · {subject} · sample content
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              More personalised examples coming soon for this combination.
-            </p>
-          )}
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-function Chip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-        active
-          ? "border-transparent bg-gradient-brand text-primary-foreground shadow-soft"
-          : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

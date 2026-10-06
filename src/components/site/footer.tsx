@@ -25,6 +25,7 @@ const COLUMNS: { title: string; links: { label: string; slug: string }[] }[] = [
   {
     title: "Resources",
     links: [
+      { label: "What is Autism?", slug: "what-is-autism" },
       { label: "Blog", slug: "blog" },
       { label: "Guides", slug: "guides" },
       { label: "Research", slug: "research" },
@@ -63,6 +64,13 @@ export function Footer() {
                   {l.slug === "about" ? (
                     <Link
                       to="/about"
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {l.label}
+                    </Link>
+                  ) : l.slug === "what-is-autism" ? (
+                    <Link
+                      to="/what-is-autism"
                       className="text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
                       {l.label}

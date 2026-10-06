@@ -1,5 +1,5 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { m as require_react } from "./@radix-ui/react-checkbox+[...].mjs";
+import { n as require_react } from "./@radix-ui/react-compose-refs+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -265,6 +265,26 @@ var CircleCheck = createLucideIcon("circle-check", [["circle", {
 	d: "m9 12 2 2 4-4",
 	key: "dzmm74"
 }]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var ExternalLink = createLucideIcon("external-link", [
+	["path", {
+		d: "M15 3h6v6",
+		key: "1q9fwt"
+	}],
+	["path", {
+		d: "M10 14 21 3",
+		key: "gplh6r"
+	}],
+	["path", {
+		d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
+		key: "a6xqqp"
+	}]
+]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -759,4 +779,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { ChartLine as A, Handshake as C, Eye as D, Flame as E, ArrowRight as F, ArrowLeft as I, Brain as M, BookOpen as N, CircleCheck as O, Award as P, Heart as S, Gauge as T, Linkedin as _, Target as a, Layers as b, Settings as c, Puzzle as d, Play as f, Mail as g, Menu as h, TrendingUp as i, ChartColumn as j, Check as k, Rocket as l, MessageSquare as m, Users as n, Sparkles as o, Pencil as p, Twitter as r, ShieldCheck as s, X as t, Repeat as u, Lightbulb as v, GraduationCap as w, Info as x, LayoutDashboard as y };
+export { Check as A, Handshake as C, Eye as D, Flame as E, Award as F, ArrowRight as I, ArrowLeft as L, ChartColumn as M, Brain as N, ExternalLink as O, BookOpen as P, Heart as S, Gauge as T, Linkedin as _, Target as a, Layers as b, Settings as c, Puzzle as d, Play as f, Mail as g, Menu as h, TrendingUp as i, ChartLine as j, CircleCheck as k, Rocket as l, MessageSquare as m, Users as n, Sparkles as o, Pencil as p, Twitter as r, ShieldCheck as s, X as t, Repeat as u, Lightbulb as v, GraduationCap as w, Info as x, LayoutDashboard as y };

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const NAV = [
   { label: "Product", to: "/platform" as const },
+  { label: "What is Autism?", to: "/what-is-autism" as const },
   { label: "How It Works", to: "/" as const, hash: "how-it-works" },
   { label: "About", to: "/about" as const },
   { label: "Blog", to: "/soon/$slug" as const, params: { slug: "blog" } },
